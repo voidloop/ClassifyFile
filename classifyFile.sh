@@ -11,6 +11,22 @@
 # check unset variables
 set -o nounset
 
+# using a date as suffix in the name of the directories
+date=$(date '+%Y%m%d_%H%M%S')
+
+# create names of the folders
+images=Images_$date
+videos=Videos_$date
+
+# create folders Images and Videos
+mkdir $images $videos
+
+# check exit status of the mkdir command
+if [ $? -ne 0 ]; then 
+    echo "mkdir command failed"
+    exit 1
+fi
+
 # analize files in current directory
 file --mime-type * | while read line; do
     file=$(echo $line | cut -d: -f1)
@@ -18,10 +34,10 @@ file --mime-type * | while read line; do
     # use only the first part of the mime type string
     case ${mime%%/*} in 
 	image)
-	    mv -v "$file" Images
+	    mv -v "$file" $images
 	    ;;
 	video)
-	    mv -v "$file" Videos
+	    mv -v "$file" $videos
 	    ;;
 	*)
      
